@@ -1,32 +1,35 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <div>
+      <app-navigation></app-navigation>
+       <br>
+      <br>
+      <div class="container">
+        <errors v-if="error" :msg="error"/>
+        <router-view/>
+      </div>
+  </div>   
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import {mapGetters} from 'vuex'
+import AppNavigation from './components/Navigation'
+import Errors from './components/Errors'
 
-#nav {
-  padding: 30px;
+export default { 
+  name:"app",
+  components:{
+    AppNavigation,
+    Errors
+    
+  },
+  computed: {
+    ...mapGetters(["error"])
+  }
 }
+</script>
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
+<style scoped>
+*{
+  background-color:#FF6752 ;
 }
 </style>
