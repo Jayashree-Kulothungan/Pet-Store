@@ -9,7 +9,6 @@ const { Mongoose } = require('mongoose');
 //facilitating image upload
 
 const multer = require('multer');
-
   //create storage engine
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
