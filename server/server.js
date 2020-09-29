@@ -5,10 +5,6 @@ const path = require('path');
 const cors = require('cors');
 const passport = require('passport');
 
-//including file system - Read files Create files Update files. Delete files Rename files
-
-var fs = require('fs'); 
-require('dotenv/config'); 
 // Initialize the app
 const app = express();
 
@@ -17,7 +13,8 @@ const app = express();
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-
+//making the uploads folder public
+app.use('/uploads', express.static('uploads'));
 // Json Body Middleware
 app.use(bodyParser.json());
 
@@ -42,6 +39,7 @@ mongoose.connect(db, {
     console.log(`Unable to connect with the database ${err}`)
 });
 
+
 //check connection 
 /*a
 pp.get('/', (req, res) => {
@@ -53,9 +51,12 @@ const users = require('./routes/api/users');
 app.use('/api/users', users);   
 
 //service Route
-const service = require('./routes/api/services')
-app.use('/api/services', service); 
+const services = require('./routes/api/services')
+app.use('/api/services', services); 
 
+//clinics Route
+const clinics = require('./routes/api/clinics')
+app.use('/api/clinics', clinics); 
 
 
 
