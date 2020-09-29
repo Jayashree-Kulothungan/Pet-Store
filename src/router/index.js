@@ -52,10 +52,10 @@ const router = new VueRouter({
       requiresAuth: true
     }
   },
-  {
+    {
       path: '/login',
       name: 'login',
-      component: () => import('../pages/Login/Login.vue'),
+      component: () => import('../pages/login/login.vue'),
       meta: {
         requiresGuest: true
       }
@@ -63,7 +63,7 @@ const router = new VueRouter({
     {
       path: '/register',
       name: 'register',
-      component: () => import('../pages/Login/Register.vue'),
+      component: () => import('../pages/login/Register.vue'),
       meta: {
         requiresGuest: true
       }
