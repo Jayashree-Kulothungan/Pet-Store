@@ -2,7 +2,7 @@ module.exports = {
   apps : [{
     name:"start",
     script: './server.js',
-    watch       : true,
+    watch: true,
     env: {
       NODE_ENV : "development",
     },
