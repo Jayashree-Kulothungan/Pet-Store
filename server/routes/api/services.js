@@ -1,12 +1,45 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
-const key = require('../../config/keys').secret;
-const User = require('../../model/User');
 const Services=require('../../model/Services')
-var ObjectID = require('mongodb').ObjectID;
+
+
+//facilitating image upload
+
+const multer = require('multer');
+
+  //create storage engine
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+      cb(null, './uploads/services');
+    },
+    filename: function(req, file, cb) {
+      let current_datetime = new Date()
+      let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + "-" + Math.random()*10000;
+      cb(null, formatted_date+file.originalname);
+    }
+});
+
+
+const fileFilter = (req, file, cb) => {
+    // reject a file
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
+  };
+
+const upload = multer({
+    storage: storage,
+    limits: {
+      fileSize: 1024 * 1024 * 5 //5 MB
+    },
+    fileFilter: fileFilter
+  });
+
+
 
 /**
  * @route POST api/services/register
@@ -14,7 +47,9 @@ var ObjectID = require('mongodb').ObjectID;
  * @access Private
  */
 
-router.post('/register', (req, res) => {
+router.post('/register',upload.array('daycare.DCImage'), (req, res) => {
+      //console.log(req.file)
+    var paths = req.files.map(file => file.path)
     const newService = new Services(req.body);
     newService
         .save(newService)
@@ -35,10 +70,9 @@ router.post('/register', (req, res) => {
  * @access Private
  */
 
-router.get('/display', (req,res) => {
+router.get('/displayUser', (req,res) => {
     const query = user =  req.body ;
     Services.find(query)
-        
         .exec((err, services) => res.json(services))
 })
 
@@ -48,18 +82,32 @@ router.get('/display', (req,res) => {
  * @access Private
  */
 
-router.get('/displayAll', (req,res) => {
+router.get('/displayZip', (req,res) => {
     const query = zipcode = req.body;
     Services.find(query)
         .exec((err, services) => res.json(services))
 })
+
 /**
- * @route GET api/services/update/daycare
+ * @route GET api/services/display
+ * @desc display the Services based on zipcode
+ * @access Private
+ */
+
+router.get('/display', (req,res) => {
+    Services.find()
+        .exec((err, services) => res.json(services))
+})
+
+/**
+ * @route GET api/services/:_id/daycare
  * @desc display the daycare
  * @access Private
  */
 
-router.put('/:_id/daycare', (req,res) => {
+router.put('/:_id/daycare', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
@@ -71,12 +119,14 @@ router.put('/:_id/daycare', (req,res) => {
 })
 
 /**
- * @route GET api/services/update/grooming
+ * @route GET api/services/:_id/grooming
  * @desc display the grooming
  * @access Private
  */
 
-router.put('/:_id/grooming', (req,res) => {
+router.put('/:_id/grooming', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
@@ -88,12 +138,14 @@ router.put('/:_id/grooming', (req,res) => {
 })
 
 /**
- * @route GET api/services/update/organisation
+ * @route GET api/services/:_id/organisation
  * @desc display the organisation
  * @access Private
  */
 
-router.put('/:_id/organisation', (req,res) => {
+router.put('/:_id/organisation', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
@@ -105,12 +157,14 @@ router.put('/:_id/organisation', (req,res) => {
 })
 
 /**
- * @route GET api/services/update/dogwalker
+ * @route GET api/services/:_id/dogwalker
  * @desc display the dogwalker
  * @access Private
  */
 
-router.put('/:_id/dogwalker', (req,res) => {
+router.put('/:_id/dogwalker', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
@@ -122,12 +176,33 @@ router.put('/:_id/dogwalker', (req,res) => {
 })
 
 /**
- * @route GET api/services/update/trainer
+ * @route GET api/services/:_id/trainer
  * @desc display the trainer
  * @access Private
  */
 
-router.put('/:_id/trainer', (req,res) => {
+router.put('/:_id/trainer', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
+    if (!req.body) {
+        return res.status(400).send({
+          message: "Data to update can not be empty!"
+        });
+    } 
+    const id=req.params._id;
+    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
+    .exec((err, services) => res.json(services))
+})
+
+/**
+ * @route GET api/services/:_id/breeding
+ * @desc display the trainer
+ * @access Private
+ */
+
+router.put('/:_id/breeding', passport.authenticate('jwt', {
+    session: false
+}), (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
