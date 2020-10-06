@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 //Axios setup
 import axios from 'axios'
 // Setting up default vue's http modules for api calls
-Vue.prototype.$http = axios;
+Vue.prototype.$http = require('axios');
 // Load the token from the localStorage
 const token = localStorage.getItem("token");
 // If there is any token then append default axios authorization headers
@@ -38,10 +38,14 @@ Vue.use(Vuetify);
 
 //vue-bootstrap
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-    // Install BootstrapVue
-    Vue.use(BootstrapVue)
-    // Optionally install the BootstrapVue icon components plugin
-    Vue.use(IconsPlugin)
+  // Install BootstrapVue
+  Vue.use(BootstrapVue)
+  // Optionally install the BootstrapVue icon components plugin
+  Vue.use(IconsPlugin)
+
+//vue-corousel
+import Carousel3d from 'vue-carousel-3d';
+Vue.use(Carousel3d);
 
 Vue.config.productionTip = false
 
