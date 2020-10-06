@@ -17,7 +17,6 @@ const ServiceSchema = new Schema({
             to : {type : String}
         },
         description : {type : String},
-        pictures : {type : String},
         price : {
             dogs : {type : String},
             cats : {type : String},
@@ -52,6 +51,7 @@ const ServiceSchema = new Schema({
                 }
             }
         },
+        DCImage : [{type : String}],
         additionalServices : {type : String},
     },
     grooming : {
@@ -60,7 +60,6 @@ const ServiceSchema = new Schema({
             to : {type : String}
         },
         description : {type : String},
-        pictures : {type : String},
         groomingService : {
             Dogs : [{
                 service : {type : String},
@@ -71,6 +70,7 @@ const ServiceSchema = new Schema({
                 price : {type : String},
             }],
         },
+        GroomingImage : [{type : String}],
         additionalServices : {type : String},
     },
     dogwalker : {
@@ -79,7 +79,7 @@ const ServiceSchema = new Schema({
             weekends : {type : String}
         },
         description : {type : String},
-        pictures : {type : String},
+        DWImage : [{type : String}],
         price : {
             weekdays : {type : String},
             weekends : {type : String}
@@ -92,7 +92,7 @@ const ServiceSchema = new Schema({
             weekends : {type : String}
         },
         description : {type : String},
-        pictures : {type : String},
+        TrainingImage : [{type : String}],
         price : {
             daily : {type : String},
             weekly : {type : String},
@@ -100,8 +100,26 @@ const ServiceSchema = new Schema({
         },
         additionalServices : {type : String},
     },
-    user : {type: Schema.Types.ObjectId, ref: User}  
-})
+    breeding : {
+        breed : {type : String},
+        age : {type : String},
+        height : {type : String},
+        weight : {type : String},
+        color : {type : String},
+        eyeColor : {type : String},
+        price : {type : String},
+        number : {type : String},
+        breedingImages:[{type:String}],
+        location : {
+            building : {type : String},
+            street : {type : String},
+            locality:{type: String},
+            city : {type : String},
+            zipcode : {type : String}
+        },
+    },
+    user : {type: Schema.Types.ObjectId, ref: User} 
+});
 
 
 module.exports = Services = mongoose.model('Services', ServiceSchema);
