@@ -32,7 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Bring in the Database Config and connect with the database
 const db = require('./config/keys').mongoURI;
 mongoose.connect(db, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    useUnifiedTopology: true
 }).then(() => {
     console.log(`Database connected successfully ${db}`)
 }).catch(err => {
