@@ -13,8 +13,8 @@ const ServiceSchema = new Schema({
     },
     daycare : {
         opentime : {
-            from : {type : String},
-            to : {type : String}
+            weekdays : {type : String},
+            weekends : {type : String}
         },
         description : {type : String},
         price : {
@@ -56,8 +56,8 @@ const ServiceSchema = new Schema({
     },
     grooming : {
         opentime : {
-            from : {type : String},
-            to : {type : String}
+            weekdays : {type : String},
+            weekends : {type : String}
         },
         description : {type : String},
         groomingService : {
