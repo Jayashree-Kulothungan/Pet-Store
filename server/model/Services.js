@@ -4,12 +4,12 @@ const User = require('./User');
 
 const ServiceSchema = new Schema({
     zipcode : {type : String},
-    organisation : {
+    organization : {
         name : {type : String},
+        organizationName: { type: String },
         email : {type : String},
         phone: {type : String},
         location : {type : String},
-        
     },
     daycare : {
         opentime : {
@@ -18,8 +18,14 @@ const ServiceSchema = new Schema({
         },
         description : {type : String},
         price : {
-            dogs : {type : String},
-            cats : {type : String},
+            dogs : {
+                weekdays : {type : String},
+                weekends : {type : String}
+            },
+            cats : {
+                weekdays : {type : String},
+                weekends : {type : String}
+            },
         },
         FoodDetails : {
             Dogs : {
@@ -52,7 +58,7 @@ const ServiceSchema = new Schema({
             }
         },
         DCImage : [{type : String}],
-        additionalServices : {type : String},
+        additionalServices : [{type : String}],
     },
     grooming : {
         opentime : {
@@ -118,7 +124,8 @@ const ServiceSchema = new Schema({
             zipcode : {type : String}
         },
     },
-    user : {type: Schema.Types.ObjectId, ref: User} 
+    user : {type: Schema.Types.ObjectId, ref: User},
+    
 });
 
 
