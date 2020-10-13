@@ -47,9 +47,7 @@ const upload = multer({
  * @access Private
  */
 
-router.post('/register',upload.array('daycare.DCImage'), (req, res) => {
-      //console.log(req.file)
-    var paths = req.files.map(file => file.path)
+router.post('/register', (req, res) => {
     const newService = new Services(req.body);
     newService
         .save(newService)
@@ -59,7 +57,7 @@ router.post('/register',upload.array('daycare.DCImage'), (req, res) => {
         .catch(err => {
             res.status(500).send({
               message:
-                err.message || "Some error occurred while creating the Tutorial."
+                err.message || "Some error occurred while creating the Service."
             });
         });
 })
@@ -90,7 +88,19 @@ router.get('/displayZip', (req,res) => {
 
 /**
  * @route GET api/services/display
- * @desc display the Services based on zipcode
+ * @desc display the Services based on serviceId
+ * @access Private
+ */
+
+router.get('/display/:_id', (req,res) => {
+  const query = req.params._id;
+  Services.findById(query)
+      .exec((err, services) => res.json(services))
+})
+
+/**
+ * @route GET api/services/display
+ * @desc display the all Services 
  * @access Private
  */
 
