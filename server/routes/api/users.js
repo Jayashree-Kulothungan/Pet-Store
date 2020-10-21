@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const key = require('../../config/keys').secret;
 const User = require('../../model/User');
+const Services = require('../../model/Services');
 
 /**
  * @route POST api/users/register
@@ -127,5 +128,38 @@ router.get('/profile', passport.authenticate('jwt', {
         user: req.user
     });
 });
+
+//check for mobile number 
+router.post('/otp',(req,res)=>{
+    User.findOne({
+        mobile: req.body.mobile
+    }).then(user => {
+        if (!user) {
+            return res.status(404).json({
+                msg: "mobile number is not found.",
+                success: false
+            });
+        }
+        return res.status(200).json({
+            msg: "mobile number is found.",
+            success: true
+        });
+        
+    })
+})
+
+//update password using mobile parameter
+router.put('/reset-password',(req,res)=>{
+    if (!req.body) {
+        return res.status(400).send({
+          message: "Data to update can not be empty!"
+        });
+    } 
+    let mobile = req.body.mobile;
+    let pass= req.body.password;
+    newPass =  { $set: {password : pass} };
+        User.findOneAndUpdate(mobile, newPass,{ useFindAndModify: true})
+            .exec((err, users) => res.json(users))
+})
 
  module.exports = router;
