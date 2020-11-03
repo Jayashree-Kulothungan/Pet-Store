@@ -59,7 +59,9 @@ app.use('/api/services', services);
 const clinics = require('./routes/api/clinics')
 app.use('/api/clinics', clinics); 
 
-
+//cart Route
+const cart = require('./routes/api/cart')
+app.use('/api/cart', cart)
 
 //Port
 const PORT = process.env.PORT || 5000;
