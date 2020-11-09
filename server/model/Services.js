@@ -9,7 +9,13 @@ const ServiceSchema = new Schema({
         organizationName: { type: String },
         email : {type : String},
         phone: {type : String},
-        location : {type : String},
+        address : {
+            no : {type : Number},  
+            street : {type : String},
+            locality : {type : String},
+            city : {type : String},
+            state : {type : String}
+        },
     },
     daycare : {
         opentime : {
@@ -27,9 +33,9 @@ const ServiceSchema = new Schema({
                 weekends : {type : String}
             },
         },
-        FoodDetails : {
-            Dogs : {
-                Breakfast : {
+        foodDetails : {
+            dogs : {
+                breakfast : {
                     food : {type : String},
                     price : {type : String},
                 },
@@ -37,13 +43,13 @@ const ServiceSchema = new Schema({
                     food : {type : String},
                     price : {type : String},
                 },
-                Dinner : {
+                dinner : {
                     food : {type : String},
                     price : {type : String},
                 }
             },
-            Cats : {
-                Breakfast : {
+            cats : {
+                breakfast : {
                     food : {type : String},
                     price : {type : String},
                 },
@@ -51,14 +57,14 @@ const ServiceSchema = new Schema({
                     food : {type : String},
                     price : {type : String},
                 },
-                Dinner : {
+                dinner : {
                     food : {type : String},
                     price : {type : String},
                 }
             }
         },
         DCImage : [{type : String}],
-        additionalServices : [{type : String}],
+        additionalServices : {type : String},
     },
     grooming : {
         opentime : {
