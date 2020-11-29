@@ -69,11 +69,10 @@ router.post('/register', (req, res) => {
  */
 
 router.get('/displayUser', (req,res) => {
-    const query = user =  req.body ;
-    Services.find(query)
-        .exec((err, services) => res.json(services))
+  const query = user =  req.body ;
+  Services.find(query)
+      .exec((err, services) => res.json(services))
 })
-
 /**
  * @route GET api/services/display
  * @desc display the Services based on zipcode
@@ -110,8 +109,8 @@ router.get('/display', (req,res) => {
 })
 
 /**
- * @route GET api/services/:_id/daycare
- * @desc display the daycare
+ * @route PUT api/services/:_id/daycare
+ * @desc Update the daycare
  * @access Private
  */
 
