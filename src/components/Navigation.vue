@@ -2,8 +2,6 @@
   <div>
     <b-navbar toggleable="lg" type="dark" variant="dark" fixed="top">
       <b-navbar-brand><router-link to="/" id="ps">Pet-Store</router-link></b-navbar-brand>
-      <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-       <b-collapse id="nav-collapse" is-nav>
           <b-navbar-brand><router-link to="/"><img :src=logo id="img"  title="mycompanylogo"></router-link></b-navbar-brand>
           <b-nav-item ><router-link to="/Clinics" id="cl">Clinics</router-link></b-nav-item>
           <b-nav-item><router-link to="/Training" id="tr">Training</router-link></b-nav-item>
@@ -12,15 +10,19 @@
           <b-nav-item><router-link to="/DayCare" id="dc">Day Care</router-link></b-nav-item>
           <b-nav-item><router-link to="/DogWalker" id="dw">Dog Walker</router-link></b-nav-item>
           <b-nav-item v-if="!isLoggedIn"><router-link to="/login" id="si">Sign In</router-link></b-nav-item>
-          <b-nav-item v-if="isLoggedIn"><router-link  to="/profile" id="pr">My Account</router-link></b-nav-item>
-          <b-nav-item v-if="isLoggedIn"><a href="" v-on:click.prevent="logoutUser" id="log">Sign out</a></b-nav-item>
-       </b-collapse>
+          <b-avatar v-if="isLoggedIn" id="av" variant="light"></b-avatar> 
+         <b-nav-item-dropdown v-if="isLoggedIn" :text=user.name right id="log" style="text-decoration:none"> 
+          <b-dropdown-item > <b-nav-item v-if="isLoggedIn"><router-link  to="/profile" >My Account</router-link></b-nav-item> </b-dropdown-item>
+          <b-dropdown-item > <b-nav-item v-if="isLoggedIn"><a href="" v-on:click.prevent="logoutUser" >Sign out</a></b-nav-item> </b-dropdown-item>
+        </b-nav-item-dropdown>
+          <b-nav-item><router-link to="/cart"><b-icon icon="cart3" scale="0.75" id="cart-icon"></b-icon></router-link></b-nav-item>
+          <p id="item">{{totalItems}}</p>
+       
     </b-navbar>
   </div>
 </template>
 
 <script>
-import Vuex from 'vuex'
 import logo from '../assets/logo.png'
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -30,18 +32,24 @@ export default {
     }
   },
    computed: {
-    ...mapGetters(["isLoggedIn"])
+    ...mapGetters(["isLoggedIn"]),
+    ...mapGetters(["user"]),
+    ...mapGetters(['totalItems'])
   },
   methods: {
     ...mapActions(["logout"]),
     logoutUser() {
       this.logout();
-    }
+    },
+    ...mapActions(["getProfile"]),
+  },
+  created(){
+    this.getProfile();
   }
 }
 </script>
 
-<style scoped>
+<style>
     .navbar{
       list-style-type: none;
       height:75px;
@@ -55,22 +63,7 @@ export default {
     .navbar.navbar-dark.bg-dark.fixed-top{
       background-color:rgb(255,103,82)!important;
     }
-     a:link{
-       color:#FFFFFF;
-       text-decoration: none;
-    }
-    a:visited{
-       color:#FFFFFF;
-       text-decoration: none;
-    }
-    a:active{
-       color:#FFFFFF;
-       text-decoration: none;
-    }
-    a:hover{
-       color:#FFFFFF;
-       text-decoration: none;
-    }
+   
     #img{
       position: absolute;
       top: 5px;
@@ -90,6 +83,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #cl{
@@ -102,6 +96,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #tr{
@@ -114,6 +109,7 @@ export default {
       font: normal normal normal 20px OpenSans;
       letter-spacing: 0px;
       color: #FFFFFF;
+      text-decoration: none ;
       opacity: 1;
     }
     #bs{
@@ -126,6 +122,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #gr{
@@ -139,6 +136,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #dc{
@@ -152,6 +150,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #dw{
@@ -164,6 +163,7 @@ export default {
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
+        text-decoration: none ;
         opacity: 1;
     }
     #si{
@@ -172,6 +172,7 @@ export default {
         left: 1397px;
         width: 169px;
         height: 33px;
+        text-decoration: none ;
         text-align: left;
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
@@ -192,15 +193,69 @@ export default {
     }
     #log{
         position:absolute;
-        top:15px;
-        left: 1600px;
+        top:10px;
+        left: 1450px;
         width: 129px;
-        height: 33px;
+        text-decoration: none ;
+        height: 55px;
         width: 129px;
         text-align: left;
+        background: none !important;
+        border:none;
         font: normal normal normal 20px OpenSans;
         letter-spacing: 0px;
         color: #FFFFFF;
         opacity: 1;
     }
+    #cart-icon{
+      position: absolute;
+      top:5px;
+      left: 1600px;
+      height: 40px;
+      width: 50px;
+      color:#FFFFFF;
+    }
+    #item{
+      position: absolute;
+      top:2px;
+      left: 1640px;
+      color:#FFFFFF;
+      font-weight: bold;
+      font-family: Poppins;
+      font-size: large;
+    }
+    #av{
+      position:absolute;
+      top:10px;
+      left: 1397px;
+      text-align:center;
+      color:rgb(255,103,82)!important
+    }
+    .dropdown-item a {
+      color:rgb(255,103,82) !important;
+      border:none;
+      text-decoration:none !important;
+    }
+    a:link{
+       color:#FFFFFF ;
+       text-decoration: none ;
+    }
+    a:hover{
+      color:#FFFFFF ;
+      text-decoration: none ;
+    }
+    .nav-item-dropdown:hover{
+      border:none;
+      text-decoration-color:transparent;
+      color:#FFFFFF;
+    }
+    .dropdown-toggle:hover{
+      border:none;
+      text-decoration-color:transparent;
+      color:#FFFFFF;
+    }
+    .dropdown-toggle:focus{
+      border: none;
+    }
+    
 </style>
