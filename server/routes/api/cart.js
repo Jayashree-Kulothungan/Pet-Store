@@ -5,7 +5,7 @@ const passport = require('passport');
 const Cart=require('../../model/Cart')
 
 
-router.post('/store', (req , res) => {
+router.post('/store', (req , res) => { 
     const newCartItem = new Cart(req.body);
     newCartItem
         .save(newCartItem)
@@ -26,4 +26,4 @@ router.get('/display', (req,res)=> {
         .exec((err, cart) => res.json(cart))
 })
 
-module.exports = router;
+module.exports = router; 
