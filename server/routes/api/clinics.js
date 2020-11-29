@@ -9,6 +9,7 @@ const { Mongoose } = require('mongoose');
 //facilitating image upload
 
 const multer = require('multer');
+
   //create storage engine
 const storage = multer.diskStorage({
     destination: function(req, file, cb) {
@@ -20,6 +21,7 @@ const storage = multer.diskStorage({
       cb(null, formatted_date+file.originalname);
     }
 });
+
 
 const fileFilter = (req, file, cb) => {
     // reject a file
@@ -40,8 +42,8 @@ const upload = multer({
 
 
 /**
- * @route POST api/services/register
- * @desc Register the Services
+ * @route POST api/Clinics/register
+ * @desc Register the Clinics
  * @access Private
  */
 
@@ -75,8 +77,8 @@ router.post('/register', upload.array('productImage'),(req, res) => {
 
 
 /**
- * @route GET api/services/display
- * @desc display the Services based on user
+ * @route GET api/Clinics/display
+ * @desc display the Clinics based on user
  * @access Private
  */
 
@@ -88,21 +90,33 @@ router.get('/display', (req,res) => {
 })
 
 /**
- * @route GET api/services/display
- * @desc display the Services based on zipcode
- * @access Private
+ * @route GET api/clinics/displayZip
+ * @desc display the Clinics based on zipcode
+ * @access Public
  */
 
-router.get('/displayAll', (req,res) => {
+router.get('/displayZip', (req,res) => {
     const query = zipcode = req.body;
     Clinics.find(query)
         .exec((err, clinics) => res.json(clinics))
 })
 
+/**
+ * @route GET api/clinincs/displayAll
+ * @desc display all the Clinics 
+ * @access Public
+ */
+
+router.get('/displayAll', (req,res) => {
+  Clinics.find()
+      .exec((err, clinics) => res.json(clinics))
+})
+
+
 
 /**
- * @route GET api/services/update/daycare
- * @desc display the daycare
+ * @route GET api/services/update/clinics
+ * @desc update the clinics
  * @access Private
  */
 
