@@ -5,29 +5,23 @@ const CartSchema = new Schema({
     dayCare : {
         DogWeekday : {type : Number},
         DogweekdayPrice : {type : Number},
-        dateDogWeekday : {type : String} ,
-        timeDogWeekday : {type : String} ,
-        //
+
         DogWeekend : {type : Number },
         DogweekendPrice : {type : Number} , 
-        dateDogWeeken : {type : String} ,
-        timeDogWeekend : {type : String},
-        //
-        CatWeekday : {type : Number},
+        
+        CatWeekday : {type : Number}, 
         CatweekdayPrice : {type : Number}, 
-        dateCatWeekday : {type : String}, 
-        timeCatWeekday : {type : String},
-        //
+        
         CatWeekend : {type : String},
         CatweekendPrice : {type : String},
-        dateCatWeekend : {type : String},
-        timeCatWeekend : {type : String},
-        //
+        
         Serviceid : {type : String} , 
         name : {type : String} ,
         address : {type : String},
         zipcde : {type : String} ,
         total : {type : Number},
+        date : {type : String} , 
+        time : {type : String} ,
     },
     user : {type: Schema.Types.ObjectId, ref: User}
 })
