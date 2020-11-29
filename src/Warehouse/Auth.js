@@ -6,25 +6,20 @@ const state = {
     token: localStorage.getItem('token') || '',
     user: {},
     status: '',
-    error: null
+    error: null,
+    userId:''
 };
-
+ 
 const getters = {
-    // isLoggedIn: function (state) {
-    //     if (state.token != '') {
-    //         return true
-    //     } else {
-    //         return false
-    //     } 
-    // }
     isLoggedIn: state => !!state.token,
     authState: state => state.status,
     user: state => state.user,
-    error: state => state.error
+    error: state => state.error,
+    userId: state =>{ return state.user._id}
 };
 
-const actions = {
-    // Login Action
+const actions = { 
+    // Login Action using password
     async login({commit}, user) {
         commit('auth_request');
         try {
@@ -40,6 +35,42 @@ const actions = {
             }
             return res;
         } catch (err) {
+            commit('auth_error', err);
+        }
+    },
+    //login action using otp
+    async loginOtp({commit}, mobile) {
+        commit('auth_request');
+        try {
+            var data = JSON.stringify({"mobile":mobile});
+
+            var config = {
+            method: 'post',
+            url: 'http://localhost:5000/api/users/login/otp',
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            data : data
+            };
+
+            axios(config)
+            .then(function (res) {
+                if (res.data.success) {
+                    const token = res.data.token;
+                    const user = res.data.user;
+                    // Store the token into the localstorage
+                    localStorage.setItem('token', token);
+                    // Set the axios defaults
+                    axios.defaults.headers.common['Authorization'] = token;
+                    commit('auth_success', token, user);
+                }
+                return res;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+         
+        }catch (err) {
             commit('auth_error', err);
         }
     },
@@ -63,6 +94,8 @@ const actions = {
         commit('profile_request');
         let res = await axios.get('http://localhost:5000/api/users/profile')
         commit('user_profile', res.data.user)
+        commit('user_id', res.data.user._id)
+        //console.log(res)
         return res;
     },
     // Logout the user
@@ -112,6 +145,9 @@ const mutations = {
     },
     user_profile(state, user) {
         state.user = user
+    },
+    user_id(state, userId){
+        state.userId = userId
     }
     
 };
