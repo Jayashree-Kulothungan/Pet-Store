@@ -121,6 +121,41 @@ router.post('/login', (req, res) => {
  * @desc Return the User's Data
  * @access Private
  */
+router.post('/login/otp', (req, res) => {
+    User.findOne({
+        mobile: req.body.mobile
+    }).then(user => {
+        if (!user) {
+            return res.status(404).json({
+                msg: "mobile number is not found.",
+                success: false
+            });
+        }
+        const payload = {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+            address: user.address
+        }
+        jwt.sign(payload, key, {
+            expiresIn: 604800
+        }, (err, token) => {
+            res.status(200).json({
+                success: true,
+                token: `Bearer ${token}`,
+                user: user,
+                msg: " You are now logged in."
+            });
+        })
+        // If there is user we are now going to compare the password
+    });
+});
+/**
+ * @route POST api/users/profile
+ * @desc Return the User's Data
+ * @access Private
+ */
 router.get('/profile', passport.authenticate('jwt', {
     session: false
 }), (req, res) => {
