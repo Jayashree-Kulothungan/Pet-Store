@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cors = require('cors');
-const passport = require('passport');
+const passport = require('passport'); 
 
 // Initialize the app
 const app = express();
