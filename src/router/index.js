@@ -9,7 +9,7 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    {
+  {
       path: '/',
       name: 'Home',
       component: Home
@@ -37,7 +37,12 @@ const router = new VueRouter({
   {
     path: '/DayCare',
     name: 'DayCare',
-    component: () => import('../pages/DayCare.vue')
+    component: () => import('../pages/DayCare/DayCare.vue')
+  },
+  {
+    path:'/DayCare/Details/:id',
+    name:'DaycareDetails',
+    component: () => import('../pages/DayCare/Details.vue')
   },
   {
       path: '/DogWalker',
@@ -67,6 +72,38 @@ const router = new VueRouter({
       meta: {
         requiresGuest: true
       }
+    },
+    {
+      path: '/login/forgot-password',
+      name: 'forgot-password',
+      component: () => import('../pages/login/ForgotPassword.vue'),
+      meta: {
+        requiresGuest: true
+      }
+    },
+    {
+      path: '/login/otp-generation',
+      name: 'otp-generation',
+      component: () => import('../pages/login/OTP.vue'),
+      meta: {
+        requiresGuest: true
+      }
+    },
+    {
+      path: '/login/reset-password',
+      name: 'reset-password',
+      component: () => import('../pages/login/ResetPassword.vue'),
+      meta: {
+        requiresGuest: true
+      }
+    },
+    {
+      path : '/cart',
+      name: 'cart',
+      component : () => import('../pages/Cart.vue'),
+      meta: {
+      requiresAuth: true
+    }
     }
   ]
 });
