@@ -3,8 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import 'bootstrap/dist/css/bootstrap.min.css'
-//import '../dist/css/root.css'
-//import '../dist/css/global.css'
 
 //Axios setup
 import axios from 'axios'
@@ -16,6 +14,7 @@ const token = localStorage.getItem("token");
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token;
 }
+Vue.prototype.$axios = axios;
 
 //Vuelidate
 import Vuelidate from 'vuelidate';
@@ -46,6 +45,9 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 //vue-corousel
 import Carousel3d from 'vue-carousel-3d';
 Vue.use(Carousel3d);
+
+import BootstrapSelect from 'bootstrap-select'
+Vue.use(BootstrapSelect);
 
 Vue.config.productionTip = false
 
