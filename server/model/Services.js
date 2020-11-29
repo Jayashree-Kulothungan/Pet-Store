@@ -10,7 +10,7 @@ const ServiceSchema = new Schema({
         email : {type : String},
         phone: {type : String},
         address : {
-            no : {type : Number},  
+            no : {type : String},  
             street : {type : String},
             locality : {type : String},
             city : {type : String},
