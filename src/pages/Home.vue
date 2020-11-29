@@ -1,74 +1,34 @@
 <template>
-    <div>
-        <!--
-        <div class="banner-c">
-            <b-carousel
-            id="carousel-1"
-            v-model="slide"
-            :interval="4000"
-            controls
-            indicators
-            background="#ababab"
-            img-width="1024"
-            img-height="480"
-            style="text-shadow: 1px 1px 2px #333;"
-            @sliding-start="onSlideStart"
-            @sliding-end="onSlideEnd"
-            >
-                <b-carousel-slide :img-src= img1 id = "img1" width="1024" height="480"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=54" id = "img2"></b-carousel-slide>
-                <b-carousel-slide img-src="https://picsum.photos/1024/480/?image=58" id = "img3"></b-carousel-slide> 
-            </b-carousel>
-            
-            
-
-        </div> -->
-        
+    <div>        
         <img :src=test class="banner">  
         <div class="services">
             <p id="head"><strong> Our Services</strong></p>
             <p id="sub">National Brand With a Local Feel. Experience the Fetch! Difference</p>
             <p id="location">Enter Your Location and Fetch Our Services</p>
             <form><input type="text" placeholder="Zip Code" id="zip"><button type="submit" id="submit"></button><b-icon icon="arrow-right" id="arrow" scale="3"></b-icon></form>
-            <div class="dogwalker">
-                <img :src=dwimg id="dwimg">
-                <p id="dwtext">Dog Walker</p>
-            </div>
-            <div class="daycare">
-                <img :src=dcimg id="dcimg">
-                <p id="dctext">Day Care</p>
-            </div>
-            <div class="grooming">
-                <img :src=grimg id="grimg">
-                <p id="grtext">Grooming</p>
-            </div>
+            <router-link to="/DogWalker">
+                <div class="dogwalker">
+                    <img :src=dwimg id="dwimg">
+                    <p id="dwtext">Dog Walker</p>
+                </div>
+            </router-link>
+            <router-link to="/DayCare">
+                <div class="daycare">
+                    <img :src=dcimg id="dcimg">
+                    <p id="dctext">Day Care</p>
+                </div>
+            </router-link>
+            <router-link to="/Grooming">
+                <div class="grooming">
+                    <img :src=grimg id="grimg">
+                    <p id="grtext">Grooming</p>
+                </div>
+            </router-link>
             <div class="otservices">
                 <img :src=otimg id="otimg">
                 <p id="ottext">Other Services</p>
             </div>
         </div>
-        <!--
-        <div class="reviews">
-            <carousel-3d @after-slide-change="onAfterSlideChange" @before-slide-change="onBeforeSlideChange" @last-slide="onLastSlide">
-                <slide :index="0">
-                    Slide 1 Content
-                </slide>
-                <slide :index="1">
-                    Slide 2 Content
-                </slide>
-                <slide :index="3">
-                    Slide 3 Content
-                </slide>
-                <slide :index="4">
-                    Slide 4 Content
-                </slide>
-                <slide :index="5">
-                    Slide 5 Content
-                </slide>
-            </carousel-3d>
-                
-        </div>
-        --> 
         <div class="footer">
             <footer>
                 <div class="abt">
