@@ -1,250 +1,81 @@
 const express = require('express');
-const router = express.Router();
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const Services=require('../../model/Services')
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path');
+const cors = require('cors');
+const passport = require('passport'); 
 
+// Initialize the app
+const app = express();
 
-//facilitating image upload
+// Middlewares
+// Form Data Middleware
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+// Json Body Middleware
+app.use(bodyParser.json());
 
-const multer = require('multer');
+//making the uploads folder public
+app.use('/uploads', express.static('uploads'));
 
-  //create storage engine
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-      cb(null, './uploads/services');
-    },
-    filename: function(req, file, cb) {
-      let current_datetime = new Date()
-      let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + "-" + Math.random()*10000;
-      cb(null, formatted_date+file.originalname); 
-    }
+// Cors Middleware
+app.use(cors());
+app.options("*", cors());
+// Use the passport Middleware
+app.use(passport.initialize());
+// Bring in the Passport Strategy
+require('./config/passport')(passport);
+
+// Seting up the static directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Bring in the Database Config and connect with the database
+const db = require('./config/keys').mongoURI;
+mongoose.connect(db, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log(`Database connected successfully ${db}`)
+}).catch(err => {
+    console.log(`Unable to connect with the database ${err}`)
 });
 
 
-const fileFilter = (req, file, cb) => {
-    // reject a file
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
-      cb(null, true);
-    } else {
-      cb(new Error('Only .jpeg or .png files are accepted'), false);
-    }
-  };
+//check connection 
+/*a
+pp.get('/', (req, res) => {
+    return res.send("<h1>Hello World</h1>");
+});
+*/
+//User Route
+const users = require('./routes/api/users');
+app.use('/api/users', users);   
 
-const upload = multer({
-    storage: storage,
-    limits: {
-      fileSize: 1024 * 1024 * 5 //5 MB
-    },
-    key: function (req, file, cb) {
-      cb(null, file.originalname);
-    },
-    fileFilter: fileFilter
-  });
+//service Route
+const services = require('./routes/api/services')
+app.use('/api/services', services); 
 
+//clinics Route
+const clinics = require('./routes/api/clinics')
+app.use('/api/clinics', clinics); 
 
+//cart Route
+const cart = require('./routes/api/cart')
+app.use('/api/cart', cart)
 
-/**
- * @route POST api/services/register
- * @desc Register the Services
- * @access Private 
- */
+//Request Route
+const request = require('./routes/api/Requests')
+app.use('/api/request', request)
 
-router.post('/register', upload.fields([
-  { name : 'DCImage', maxCount : 10},
-  { name : 'GroomingImage', maxCount : 10},
-  { name : 'DWImage', maxCount : 10},
-  { name : 'TrainingImage', maxCount : 10},
-  { name : 'breedingImages', maxCount : 10}
-]),(req, res) => {
- // var paths = req.fields.map(file => file.path)
- let daycare = []
-  const newService = new Services(req.body);
-  for(let i=0 ; i<req.files.DCImage.length ; i++){
-    newService.DCImage[i] = req.files.DCImage[i].path
-  }
-  for(let i=0 ; i<req.files.GroomingImage.length ; i++){
-    newService.GroomingImage[i] = req.files.GroomingImage[i].path
-  }
-  for(let i=0 ; i<req.files.DWImage.length ; i++){
-    newService.DWImage[i] = req.files.DWImage[i].path
-  }
-  for(let i=0 ; i<req.files.TrainingImage.length ; i++){
-    newService.TrainingImage[i] = req.files.TrainingImage[i].path
-  }
-  for(let i=0 ; i<req.files.breedingImages.length ; i++){
-    newService.breedingImages[i] = req.files.breedingImages[i].path
-  }
-    newService
-        .save(newService)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-              message:
-                err.message || "Some error occurred while creating the Service."
-            });
-        });
+//Port
+const PORT = process.env.PORT || 5000;
+
+app.get('*', (req, res) => {
+   // res.sendFile(path.join(__dirname, '../client/public', 'index.html'));
+    res.json({msg:"error"})
 })
 
-/**
- * @route POST api/services/display
- * @desc display the Services based on user
- * @access Private
- */
-
-router.post('/displayUser', (req,res) => {
-  const query =   req.body ;
-  Services.find(query)
-      .exec((err, services) => res.json(services)) 
+app.listen(PORT, () => {
+    console.log('Server started on port: ',PORT);
 })
-/**
- * @route GET api/services/display
- * @desc display the Services based on zipcode
- * @access Private
- */
-
-router.get('/displayZip', (req,res) => {
-    const query = zipcode = req.body;
-  
-    Services.find(query)
-        .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/display
- * @desc display the Services based on serviceId
- * @access Private
- */
-
-router.get('/display/:_id', (req,res) => {
-  const query = req.params._id;
-  Services.findById(query)
-      .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/display
- * @desc display the all Services 
- * @access Private
- */
-
-router.get('/display', (req,res) => {
-    Services.find()
-        .exec((err, services) => res.json(services))
-})
-
-/**
- * @route PUT api/services/:_id/daycare
- * @desc Update the daycare
- * @access Private
- */
-
-router.put('/:_id/update', (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-/**
- * @route PUT api/services/:_id/grooming
- * @desc display the grooming
- * @access Private
- */
-
-router.put('/:_id/grooming', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/:_id/organisation
- * @desc display the organisation
- * @access Private
- */
-
-router.put('/:_id/organisation', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/:_id/dogwalker
- * @desc display the dogwalker
- * @access Private
- */
-
-router.put('/:_id/dogwalker', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/:_id/trainer
- * @desc display the trainer
- * @access Private
- */
-
-router.put('/:_id/trainer', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-/**
- * @route GET api/services/:_id/breeding
- * @desc display the trainer
- * @access Private
- */
-
-router.put('/:_id/breeding', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
-    if (!req.body) {
-        return res.status(400).send({
-          message: "Data to update can not be empty!"
-        });
-    } 
-    const id=req.params._id;
-    Services.findByIdAndUpdate({_id : id}, req.body,{ useFindAndModify: false } )
-    .exec((err, services) => res.json(services))
-})
-
-module.exports = router;
