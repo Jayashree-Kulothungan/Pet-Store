@@ -4,8 +4,8 @@
       <div>
         <p id="title">My Account</p>
         <hr id="hr"> 
-        <div class="card">
-          <form  @submit.prevent="handleSubmit" v-if="services!={}">
+        <div class="card" >
+          <form  @submit.prevent="handleSubmit" v-if="!services[0]">
             <input type="text" id="name" placeholder="Name" v-model="organization.organization.name">
             <input type="text" id="organization" placeholder="Name of Organization" v-model="organization.organization.organizationName">
             <input type="email" id="email" placeholder="Email" v-model="organization.organization.email">
@@ -15,7 +15,7 @@
             <input type="text" id="locality" placeholder="Locality" v-model="organization.organization.address.locality">
             <input type="text" id="city" placeholder="City" v-model="organization.organization.address.city">
             <input type="text" id="state" placeholder="State" v-model="organization.organization.address.state" >
-            <input type="text" id="zipcode" placeholder="zipcode" v-model="organization.zipcode">
+            <input type="text" id="zipcode" placeholder="zipcode" v-model="organization.organization.address.zipcode">
             <div>
               <p id="service">Services:</p>
                 <p id="dc"><input type="checkbox" name="services" value="Day Care"><label>Day Care</label></p>
@@ -27,7 +27,16 @@
             </div>
             <button id="regser" type="submit" value="submit">Register Service</button>
           </form>
-          <p style="position:absolute; top:700px;">{{services}}</p>
+          <div >
+           <table border="0" id="tab" v-if="services[0]">
+             <tr><td >Name </td><td >: {{organization1.name}}</td></tr>
+             <tr><td>Name of Organisation </td><td>: {{organization1.organizationName}}</td></tr>
+             <tr><td>Email </td><td>: {{organization1.email}}</td></tr>
+             <tr><td>Mobile </td><td>: {{organization1.phone}}</td></tr>
+             <tr><td>Location </td><td>: {{organization1.address.no}} {{organization1.address.street}} {{organization1.address.locality}} {{organization1.address.state}}</td></tr>
+             <tr><td>Zipcode </td><td>: {{organization1.address.zipcode}}</td></tr>
+           </table>
+          </div>
         </div>  
       </div>
     </div>
@@ -62,14 +71,31 @@ import axios from 'axios'
             location:'',
           }
         },
-        services : ''
+        display:[]
       }
     },
   computed: {
-      ...mapGetters(["user"]),
-      //...mapGetters(["services"]),
-      ...mapGetters(["userId"])
-    }, 
+    ...mapGetters(["user"]),
+    ...mapGetters(["services"]),
+    organization1 () {
+      if (!this.services[0]) {
+        return {
+          name: '',
+          organizationName : '',
+          email : '',
+          phone :'',
+          address :{
+            no :'',
+            street:'',
+            locality : '',
+            state :'',
+            zipcode :''
+          }
+        }  
+       }
+      return this.services[0].organization
+    },
+  },
   methods: {
     ...mapActions(["getProfile"]),
     ...mapActions(["registerServices"]),
@@ -78,40 +104,20 @@ import axios from 'axios'
       console.log(this.user._id)
       this.organization.user = this.user._id
       this.registerServices(this.organization)
+      location.reload();
     },
-    getData: async function () {
-      var axios = require('axios');
-      var data = JSON.stringify({"user":"5f8425a33a14f026f80133ed"});
-
-      var config = {
-        method: 'get',
-        url: 'http://localhost:5000/api/services/displayUser/',
-        headers: { 
-          'Content-Type': 'application/json'
-        },
-        data : data
-      };
-
-      axios(config)
-      .then(function (response) {
-        console.log(response.data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    }
-
   },
     async created() {
       await this.getProfile();
     },         
     async mounted(){
-      await this.getData()
+     this.fetchServices(this.user._id)
+     
     }
   };
 </script>
  
-<style scoped>
+<style scoped> 
 *:focus {
     outline: 0 !important;
 }
@@ -434,5 +440,16 @@ import axios from 'axios'
   left:5px;
   width: 500px;
   height: 50px;
+}
+#tab{
+  position: absolute;
+  font: normal normal 300 20px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  width : 1000px;
+}
+td{
+  width: 1500px;
 }
 </style>
