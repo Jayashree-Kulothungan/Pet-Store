@@ -33,7 +33,7 @@ Vue.use(VueSplit)
 
 //using vuetify
 import Vuetify from 'vuetify';
-Vue.use(Vuetify);
+
 
 //vue-bootstrap
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
@@ -50,9 +50,9 @@ import BootstrapSelect from 'bootstrap-select'
 Vue.use(BootstrapSelect);
 
 Vue.config.productionTip = false
-
+Vue.use(Vuetify);
 new Vue({
-  vuetify : new Vuetify(),
+  //vuetify : new Vuetify(),
   router,
   store,
   render: h => h(App)
