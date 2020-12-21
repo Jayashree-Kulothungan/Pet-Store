@@ -31,6 +31,7 @@ const actions = {
     fetchLocality({commit}, locality) {
         commit('sortLocality', locality)
     }
+    
 };
 
 const mutations = {
