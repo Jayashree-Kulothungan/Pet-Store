@@ -77,12 +77,12 @@ router.post('/register', upload.array('productImage'),(req, res) => {
 
 
 /**
- * @route GET api/Clinics/display
+ * @route POST api/Clinics/display
  * @desc display the Clinics based on user
  * @access Private
  */
 
-router.get('/display', (req,res) => {
+router.post('/display', (req,res) => {
     const query = user =  req.body ;
     Clinics.find(query)
         
