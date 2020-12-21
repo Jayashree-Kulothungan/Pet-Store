@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./User');
 
-const ServiceSchema = new Schema({
-    zipcode : {type : String},
+const ServiceSchema = new Schema({    
     organization : {
         name : {type : String},
         organizationName: { type: String },
@@ -14,7 +13,8 @@ const ServiceSchema = new Schema({
             street : {type : String},
             locality : {type : String},
             city : {type : String},
-            state : {type : String}
+            state : {type : String},
+            zipcode : {type : String},
         },
     },
     daycare : {
@@ -36,34 +36,27 @@ const ServiceSchema = new Schema({
         foodDetails : {
             dogs : {
                 breakfast : {
-                    food : {type : String},
                     price : {type : String},
                 },
                 lunch : {
-                    food : {type : String},
                     price : {type : String},
                 },
                 dinner : {
-                    food : {type : String},
                     price : {type : String},
                 }
             },
             cats : {
                 breakfast : {
-                    food : {type : String},
                     price : {type : String},
                 },
                 lunch : {
-                    food : {type : String},
                     price : {type : String},
                 },
                 dinner : {
-                    food : {type : String},
                     price : {type : String},
                 }
             }
         },
-        DCImage : [{type : String}],
         additionalServices : {type : String},
     },
     grooming : {
@@ -74,7 +67,6 @@ const ServiceSchema = new Schema({
         description : {type : String},
         groomingService : {
             Dogs : [{
-                service : {type : String},
                 price : {type : String},
             }],
             Cats : [{
@@ -82,7 +74,6 @@ const ServiceSchema = new Schema({
                 price : {type : String},
             }],
         },
-        GroomingImage : [{type : String}],
         additionalServices : {type : String},
     },
     dogwalker : {
@@ -91,7 +82,6 @@ const ServiceSchema = new Schema({
             weekends : {type : String}
         },
         description : {type : String},
-        DWImage : [{type : String}],
         price : {
             weekdays : {type : String},
             weekends : {type : String}
@@ -104,7 +94,6 @@ const ServiceSchema = new Schema({
             weekends : {type : String}
         },
         description : {type : String},
-        TrainingImage : [{type : String}],
         price : {
             daily : {type : String},
             weekly : {type : String},
@@ -121,18 +110,21 @@ const ServiceSchema = new Schema({
         eyeColor : {type : String},
         price : {type : String},
         number : {type : String},
-        breedingImages:[{type:String}],
         location : {
             building : {type : String},
             street : {type : String},
-            locality:{type: String},
+            locality:{type: String}, 
             city : {type : String},
             zipcode : {type : String}
         },
     },
-    user : {type: Schema.Types.ObjectId, ref: User},
     
+    breedingImages:[{type:String}],
+    TrainingImage : [{type : String}],
+    DWImage : [{type : String}],
+    DCImage : [{type : String}],
+    GroomingImage : [{type : String}],
+    ServiceProvider : {type: Schema.Types.ObjectId, ref: User},
 });
-
 
 module.exports = Services = mongoose.model('Services', ServiceSchema);
