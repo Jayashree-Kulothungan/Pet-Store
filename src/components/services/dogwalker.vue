@@ -32,11 +32,26 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
 export default {
   data (){
     return {
       availableTime : false,
-      price : false
+      price : false,
+      data : {
+        dogwalker : {
+          availabletime : {
+            weekdays : '',
+            weekends : ''
+        },
+        description :'',
+        price : {
+            weekdays : '',
+            weekends : ''
+        },
+        additionalServices : '',
+        }
+      }
     }
   },
   methods : {
@@ -47,7 +62,32 @@ export default {
     showPrice() {
       this.price = !this.price
       this.availableTime=false
+    },
+     ...mapActions(["updateServices"]),
+    handleSubmit(){
+      //console.log(JSON.parse(JSON.stringify(this.data)))
+      this.updateServices(JSON.parse(JSON.stringify(this.data)))
     }
+  },
+  computed : {
+    ...mapGetters(["services"]),
+    dayCare () {
+      if (!this.services[0]) {
+        return {
+          availabletime : {
+            weekdays : '',
+            weekends : ''
+          },
+          description :'',
+          price : {
+              weekdays : '',
+              weekends : ''
+          },
+          additionalServices : '',
+          }  
+       }
+      return this.services[0].dogwalker
+    },
   }
 }
 </script>
