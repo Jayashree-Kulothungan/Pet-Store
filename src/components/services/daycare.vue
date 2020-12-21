@@ -1,68 +1,240 @@
 <template>
-    <div>
-        <div class="container">
-            <p id="title">Day Care</p>
-            <hr id="hr">
-            <div class="card">
-                <form>
-                  <input type="text" id="time" placeholder="Open Time">
-                  <input type="text" id="description" placeholder="Description">
-                  <input type="text" id="photo" placeholder="Upload Photos" disabled>
-                  <input type="file" id="photofile">
-                  <p id="price" @click="showPrice">Price</p>
-                  <div class ="price" v-if="price">
-                    <p id="dogs"><input type = "checkbox" value="dogs"><label>Dogs</label></p>
-                      <p id="dogs-price">Price:</p><input type="text" id="dogs-pr">
-                    <p id="cats"><input type = "checkbox" value="cats"><label>Cats</label></p>
-                      <p id="cats-price">Price:</p><input type="text" id="cats-pr">
-                  </div>
-
-                  <p id="food" @click="showFoodDetails">Food Details </p>
-                  <input type="text" id="other" placeholder="Other Specifications">
-
-                  <div class="food-details" v-if="foodDetails">
-                    <div class="dog">
-                      <p id="dog">Dog:</p>
-                      <p id="d-bf"><input type = "checkbox"><label>Breakfast</label></p>
-                      <p id="d-bf-price">Price:</p><input type="text" id="d-bf-pr">
-                      <p id="d-ln"><input type = "checkbox"><label>Lunch</label></p>
-                      <p id="d-ln-price">Price:</p><input type="text" id="d-ln-pr">
-                      <p id="d-di"><input type = "checkbox"><label>Dinner</label></p>
-                      <p id="d-di-price">Price:</p><input type="text" id="d-di-pr">
-                    </div>
-                    <div class="cat">
-                      <p id="cat">Cat:</p>
-                      <p id="c-bf"><input type = "checkbox"><label>Breakfast</label></p>
-                      <p id="c-bf-price">Price: </p><input type="text" id="c-bf-pr">
-                      <p id="c-ln"><input type = "checkbox"><label>Lunch</label></p>
-                      <p id="c-ln-price">Price: </p><input type="text" id="c-ln-pr">
-                      <p id="c-di"><input type = "checkbox"><label>Dinner</label></p>
-                      <p id="c-di-price">Price: </p><input type="text" id="c-di-pr">
-                    </div>
-                  </div>
-                  <button type="submit" id="reg-ser">Submit</button>
-                </form>
+  <div> 
+    <div class ="container">
+      <p id="title">Day Care</p>
+      <hr id="hr">
+      <div class="card">
+        <form  @submit.prevent="handleSubmit" v-if="!services[0]">
+          <!-- Timings -->
+          <p id="time" @click= "showTime">Opens At</p>
+          <div class="time" v-if="time">
+            <p id="weekdays"> Weekdays </p> <input type="time" id="weekdaytime" placeholder="Enter time" v-model="data.daycare.opentime.weekdays">
+            <p id="weekends"> Weekends </p> <input type="time" id="weekendtime" placeholder="Enter time" v-model="data.daycare.opentime.weekends">          
+          </div>
+          <!-- Description -->
+          <input type="text" id="description" placeholder="Description" v-model="data.daycare.description" > 
+          <!-- Image -->
+          <input type="text" id="photo" placeholder="Upload Photos" disabled>
+            <input type="file" id="photofile">
+          <!-- Price -->
+          <p id="price" @click="showPrice">Price </p>
+          <div class ="price" v-if="price">
+            <p id="dogs"><label>Dogs</label></p><p id="dr-day">&#x20B9;</p><input type="text" id="day-dogs-pr" placeholder="Price on Weekdays" v-model="data.daycare.price.dogs.weekdays"><p id="dr-end">&#x20B9;</p> <input type="text" id="end-dogs-pr" placeholder="Price on Weekends" v-model="data.daycare.price.dogs.weekends">
+            <p id="cats"><label>Cats</label></p><p id="cr-day">&#x20B9;</p><input type="text" id="day-cats-pr" placeholder="Price on Weekdays" v-model="data.daycare.price.cats.weekdays"><p id="cr-end">&#x20B9;</p> <input type="text" id="end-cats-pr" placeholder="Price on Weekends" v-model="data.daycare.price.cats.weekends">
+          </div>
+          <!-- Food Details -->
+          <p id="food" @click="showFoodDetails">Food Details </p>
+          <div class="food-details" v-if="foodDetails">
+            <!--Dogs -->
+            <div class="dog">
+              <p id="dog">Dog:</p>
+              <p id="d-bf"><label>Breakfast</label></p>
+              <p id="d-bf-price">Price: &#x20B9;</p><input type="text" id="d-bf-pr" v-model="data.daycare.foodDetails.dogs.breakfast.price">
+              <p id="d-ln"><label>Lunch</label></p>
+              <p id="d-ln-price">Price: &#x20B9;</p><input type="text" id="d-ln-pr" v-model="data.daycare.foodDetails.dogs.lunch.price">
+              <p id="d-di"><label>Dinner</label></p>
+              <p id="d-di-price">Price: &#x20B9;</p><input type="text" id="d-di-pr" v-model="data.daycare.foodDetails.dogs.dinner.price">
             </div>
-        </div>
+            <!-- Cats -->
+            <div class="cat">
+              <p id="cat">Cat:</p>
+              <p id="c-bf"><label>Breakfast</label></p>
+              <p id="c-bf-price">Price: &#x20B9;</p><input type="text" id="c-bf-pr" v-model="data.daycare.foodDetails.cats.breakfast.price">
+              <p id="c-ln"><label>Lunch</label></p>
+              <p id="c-ln-price">Price: &#x20B9;</p><input type="text" id="c-ln-pr" v-model="data.daycare.foodDetails.cats.lunch.price">
+              <p id="c-di"><label>Dinner</label></p>
+              <p id="c-di-price">Price: &#x20B9;</p><input type="text" id="c-di-pr" v-model="data.daycare.foodDetails.cats.dinner.price">
+            </div>
+          </div>
+          <!-- Other Specifications -->
+          <input type="text" id="other" placeholder="Other Specifications" v-model="data.daycare.additionalServices">
+
+          <button type="submit" id="reg-ser">Submit</button>
+        </form>
+
+        <div >
+          <table border="0" id="tab" v-if="dayCare.description">
+            <tr> 
+               <th style="width:10em" >Open Time: </th>
+               <td>Open on weekdays from {{dayCare.opentime.weekdays}} and on weekends from {{dayCare.opentime.weekends}}</td>
+            </tr>
+            <tr>
+               <th>Description:</th>
+               <td> {{dayCare.description}} </td>
+            </tr>
+              <tr>
+               <th> Price: </th>
+               <td> 
+                 <tr> 
+                    <th style="width: 13em;"> Dogs: </th>
+                    <th> Cats: </th>
+                 </tr>
+                 <tr>
+                  <td style="width: 13em;">Weekdays: &#x20B9; {{dayCare.price.dogs.weekdays}} </td>
+                  <td>Weekdays: &#x20B9; {{dayCare.price.cats.weekdays}} </td>
+                 </tr>
+                 <tr>
+                  <td style="width: 13em;">Weekends: &#x20B9; {{dayCare.price.dogs.weekends}} </td>
+                  <td>Weekends: &#x20B9; {{dayCare.price.cats.weekends}} </td>
+                 </tr>
+               </td>
+            <tr>
+               <th>Food Details:</th>
+               <td>
+                 <tr>
+                    <th style="width: 13em;">Dogs:</th>
+                    <th>Cats:</th>
+                 </tr>
+                 <tr>
+                <td style="width: 13em;"> Breakfast Price :  &#x20B9; {{dayCare.foodDetails.dogs.breakfast.price}} </td>
+                <td> Breakfast Price :  &#x20B9; {{dayCare.foodDetails.cats.breakfast.price}} </td>
+                 </tr>
+                 <tr>
+                  <td style="width: 13em;"> Lunch Price :  &#x20B9; {{dayCare.foodDetails.dogs.lunch.price}} </td>
+                  <td> Lunch Price :  &#x20B9; {{dayCare.foodDetails.cats.lunch.price}} </td>
+                 </tr>
+                 <tr>
+                  <td style="width: 13em;"> Dinner Price :  &#x20B9; {{dayCare.foodDetails.dogs.dinner.price}} </td>
+                  <td> Dinner Price :  &#x20B9; {{dayCare.foodDetails.cats.dinner.price}} </td>
+                 </tr>
+                </td>
+              </tr> 
+            <tr>
+               <th>Other Specifications:</th>
+               <td>{{dayCare.additionalServices}}</td>
+            </tr>
+          </table>
+        </div>  
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
+import { mapActions, mapGetters } from "vuex";
+import axios from 'axios'
 export default {
   data () {
     return{
       foodDetails : false,
-      price : false
+      price : false,
+      time : false,
+      data : {
+        daycare : {
+          opentime : {
+            weekdays : '',
+            weekends : ''
+          },
+          description : '',
+          price : {
+            dogs : {
+              weekdays : '',
+              weekends : ''
+            },
+            cats : {
+              weekdays : '',
+              weekends : ''
+             },
+          },
+          foodDetails : {
+            dogs : {
+              breakfast : {
+                price : '',
+              },
+              lunch : {
+                price : '',
+              },
+              dinner : {
+                price : '',
+              }
+            },
+            cats : {
+              breakfast : {
+                price : '',
+              },
+              lunch : {
+                price : '',
+              },
+              dinner : {
+                price : '',
+              }
+            }
+          },
+          additionalServices : '',
+        }
+      }
     }
+  },
+  computed :{
+    ...mapGetters(["services"]),
+    dayCare () {
+      if (!this.services[0]) {
+        return {
+          opentime : {
+            weekdays : '',
+            weekends : ''
+          },
+          description : '',
+          price : {
+            dogs : {
+              weekdays : '',
+              weekends : ''
+            },
+            cats : {
+              weekdays : '',
+              weekends : ''
+             },
+          },
+          foodDetails : {
+            dogs : {
+              breakfast : {
+                price : '',
+              },
+              lunch : {
+                price : '',
+              },
+              dinner : {
+                price : '',
+              }
+            },
+            cats : {
+              breakfast : {
+                price : '',
+              },
+              lunch : {
+                price : '',
+              },
+              dinner : {
+                price : '',
+              }
+            }
+          },
+          additionalServices : '',
+        }  
+       }
+      return this.services[0].daycare
+    },
   },
   methods : {
     showFoodDetails() {
       this.foodDetails = !this.foodDetails
       this.price = false
+      this.time = false
     },
     showPrice() {
       this.price = !this.price
       this.foodDetails=false
+      this.time = false
+    },
+    showTime() {
+      this.time = !this.time
+      this.price = false
+      this.foodDetails=false
+    },
+    ...mapActions(["updateServices"]),
+    handleSubmit(){
+      //console.log(JSON.parse(JSON.stringify(this.data)))
+      this.updateServices(JSON.parse(JSON.stringify(this.data)))
     }
   }
 }
@@ -115,6 +287,72 @@ export default {
   left:5px;
   width: 500px;
   height: 50px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  opacity: 1;
+  text-align: left;
+  font: normal normal 300 20px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  text-indent: 30px;
+}
+.time{
+  position: absolute;
+  top:60px;
+  left:5px;
+  width: 500px;
+  height:100px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  opacity: 1;
+  z-index:100;
+}
+#weekdays{
+  position: absolute;
+  top:5px;
+  left:10px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#weekends{
+  position: absolute;
+  top:50px;
+  left:10px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#weekdaytime{
+  position: absolute;
+  top:5px;
+  left:200px;
+  width: 250px;
+  height: 35px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  opacity: 1;
+  text-align: left;
+  font: normal normal 300 20px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  text-indent: 30px;
+}
+#weekendtime{
+  position: absolute;
+  top:50px;
+  left:200px;
+  width: 250px;
+  height: 35px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #DCDCDC;
   border-radius: 3px;
@@ -179,26 +417,164 @@ export default {
   color: #707070;
   text-indent: 30px;
 }
-#food{
+.price{
   position: absolute;
-  top:210px;
-  left:5px;
+  top:160px;
+  left:580px;
   width: 500px;
-  height: 50px;
+  height:100px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #DCDCDC;
   border-radius: 3px;
   opacity: 1;
+  z-index:100;
+}
+#dogs{
+  position: absolute;
+  top:5px;
+  left:10px;
   text-align: left;
-  font: normal normal 300 20px Poppins;
+  font: normal normal 300 18px Poppins;
   letter-spacing: 0px;
   color: #707070;
-  text-indent: 30px;
+  opacity: 1;
+  text-indent: 10px;
 }
-#other{
+#dr-day{
+  position: absolute;
+  top:5px;
+  left:80px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#dr-end{
+  position: absolute;
+  top:5px;
+  left:255px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#day-dogs-pr{
+  position: absolute;
+  top:2px;
+  left:100px;
+  width: 150px;
+  text-align: left;
+  font: normal normal 300 15px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  text-align: center;
+  opacity: 1;
+  height: 25px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  border-top:none;
+  border-left: none;
+  border-right: none;
+}
+#end-dogs-pr{
+  position: absolute;
+  top:2px;
+  left:280px;
+  text-align: left;
+  font: normal normal 300 15px Poppins;
+  text-align: center;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  width: 150px;
+  height: 25px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  border-top:none;
+  border-left: none;
+  border-right: none;
+}
+#cats{
+  position: absolute;
+  top:50px;
+  left:10px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#cr-day{
+  position: absolute;
+  top:50px;
+  left:80px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#cr-end{
+  position: absolute;
+  top:50px;
+  left:255px;
+  text-align: left;
+  font: normal normal 300 18px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  text-indent: 10px;
+}
+#day-cats-pr{
+  position: absolute;
+  top:47px;
+  left:100px;
+  width: 150px;
+  text-align: left;
+  font: normal normal 300 15px Poppins;
+  letter-spacing: 0px;
+  color: #707070;
+  text-align: center;
+  opacity: 1;
+  height: 25px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  border-top:none;
+  border-left: none;
+  border-right: none;
+}
+#end-cats-pr{
+  position: absolute;
+  top:47px;
+  left:280px;
+  text-align: left;
+  font: normal normal 300 15px Poppins;
+  text-align: center;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  width: 150px;
+  height: 25px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #DCDCDC;
+  border-radius: 3px;
+  border-top:none;
+  border-left: none;
+  border-right: none;
+}
+#food{
   position: absolute;
   top:210px;
-  left:580px;
+  left:5px;
   width: 500px;
   height: 50px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -498,95 +874,21 @@ export default {
   border-left: none;
   border-right: none;
 }
-.price{
+#other{
   position: absolute;
-  top:160px;
+  top:210px;
   left:580px;
   width: 500px;
-  height:100px;
+  height: 50px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #DCDCDC;
   border-radius: 3px;
   opacity: 1;
-  z-index:100;
-}
-#dogs{
-  position: absolute;
-  top:5px;
-  left:50px;
   text-align: left;
-  font: normal normal 300 18px Poppins;
+  font: normal normal 300 20px Poppins;
   letter-spacing: 0px;
   color: #707070;
-  opacity: 1;
-  text-indent: 10px;
-}
-#dogs-price{
-  position: absolute;
-  top:5px;
-  left:200px;
-  text-align: left;
-  font: normal normal 300 18px Poppins;
-  letter-spacing: 0px;
-  color: #707070;
-  opacity: 1;
-}
-#dogs-pr{
-  position: absolute;
-  top:2px;
-  left:280px;
-  text-align: left;
-  font: normal normal 300 18px Poppins;
-  letter-spacing: 0px;
-  color: #707070;
-  opacity: 1;
-  width: 150px;
-  height: 25px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #DCDCDC;
-  border-radius: 3px;
-  border-top:none;
-  border-left: none;
-  border-right: none;
-}
-#cats{
-  position: absolute;
-  top:50px;
-  left:50px;
-  text-align: left;
-  font: normal normal 300 18px Poppins;
-  letter-spacing: 0px;
-  color: #707070;
-  opacity: 1;
-  text-indent: 10px;
-}
-#cats-price{
-  position: absolute;
-  top:50px;
-  left:200px;
-  text-align: left;
-  font: normal normal 300 18px Poppins;
-  letter-spacing: 0px;
-  color: #707070;
-  opacity: 1;
-}
-#cats-pr{
-  position: absolute;
-  top:47px;
-  left:280px;
-  text-align: left;
-  font: normal normal 300 18px Poppins;
-  letter-spacing: 0px;
-  color: #707070;
-  opacity: 1;
-  width: 150px;
-  height: 25px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #DCDCDC;
-  border-radius: 3px;
-  border-top:none;
-  border-left: none;
-  border-right: none;
+  text-indent: 30px;
 }
 #reg-ser{
   position: absolute;
@@ -604,4 +906,15 @@ export default {
   letter-spacing: 0px;
   color: #FFFFFF;
 }
+#tab {
+  position: absolute;
+  top: 10px;
+  font: normal normal 300 15px Poppins;
+  padding: 10px;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
+  width : 1000px;
+}
+
 </style>
