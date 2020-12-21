@@ -245,7 +245,7 @@ export default {
 
         },
         UpdateCart : function (DogWeekday,DogWeekend,CatWeekday,CatWeekend){
-            this.cartData.serviceid=this.daycaredata._id;
+            this.cartData.ServiceId =this.daycaredata._id;
             this.cartData.name = this.daycaredata.organization.organizationName;
             this.cartData.address = this.daycaredata.organization.location;
             this.cartData.zipcode = this.daycaredata.zipcode;
@@ -260,7 +260,9 @@ export default {
             if(this.dogsPrice.weekends > 0){this.cartData.DogWeekend = this.dogsPrice.weekends}else {this.cartData.DogWeekend = 0}
             if(this.CatsPrice.weekdays > 0){this.cartData.CatWeekday = this.CatsPrice.weekdays}else {this.cartData.CatWeekday = 0}
             if(this.CatsPrice.weekends > 0){this.cartData.CatWeekend = this.CatsPrice.weekends}else {this.cartData.CatWeekend = 0}
-            this.cartData.user = this.user._id
+            this.cartData.CustomerId = this.user._id
+            this.cartData.CustomerName = this.user.name
+            this.cartData.serviceProvider = this.daycaredata.ServiceProvider
         },
         addToCart(){
             this.dayCareCart(this.cartData)
