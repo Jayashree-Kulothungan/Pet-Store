@@ -30,7 +30,7 @@ export default {
   data (){
     return {
       availableTime : false,
-      price : false
+      price : false,
     }
   },
   methods : {
