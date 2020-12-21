@@ -17,17 +17,17 @@ const storage = multer.diskStorage({
     filename: function(req, file, cb) {
       let current_datetime = new Date()
       let formatted_date = current_datetime.getDate() + "-" + (current_datetime.getMonth() + 1) + "-" + current_datetime.getFullYear() + "-" + Math.random()*10000;
-      cb(null, formatted_date+file.originalname);
+      cb(null, formatted_date+file.originalname); 
     }
 });
 
 
 const fileFilter = (req, file, cb) => {
     // reject a file
-    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
       cb(null, true);
     } else {
-      cb(null, false);
+      cb(new Error('Only .jpeg or .png files are accepted'), false);
     }
   };
 
@@ -35,6 +35,9 @@ const upload = multer({
     storage: storage,
     limits: {
       fileSize: 1024 * 1024 * 5 //5 MB
+    },
+    key: function (req, file, cb) {
+      cb(null, file.originalname);
     },
     fileFilter: fileFilter
   });
@@ -44,11 +47,34 @@ const upload = multer({
 /**
  * @route POST api/services/register
  * @desc Register the Services
- * @access Private
+ * @access Private 
  */
 
-router.post('/register', (req, res) => {
-    const newService = new Services(req.body);
+router.post('/register', upload.fields([
+  { name : 'DCImage', maxCount : 10},
+  { name : 'GroomingImage', maxCount : 10},
+  { name : 'DWImage', maxCount : 10},
+  { name : 'TrainingImage', maxCount : 10},
+  { name : 'breedingImages', maxCount : 10}
+]),(req, res) => {
+ // var paths = req.fields.map(file => file.path)
+ let daycare = []
+  const newService = new Services(req.body);
+  for(let i=0 ; i<req.files.DCImage.length ; i++){
+    newService.DCImage[i] = req.files.DCImage[i].path
+  }
+  for(let i=0 ; i<req.files.GroomingImage.length ; i++){
+    newService.GroomingImage[i] = req.files.GroomingImage[i].path
+  }
+  for(let i=0 ; i<req.files.DWImage.length ; i++){
+    newService.DWImage[i] = req.files.DWImage[i].path
+  }
+  for(let i=0 ; i<req.files.TrainingImage.length ; i++){
+    newService.TrainingImage[i] = req.files.TrainingImage[i].path
+  }
+  for(let i=0 ; i<req.files.breedingImages.length ; i++){
+    newService.breedingImages[i] = req.files.breedingImages[i].path
+  }
     newService
         .save(newService)
         .then(data => {
@@ -63,15 +89,15 @@ router.post('/register', (req, res) => {
 })
 
 /**
- * @route GET api/services/display
+ * @route POST api/services/display
  * @desc display the Services based on user
  * @access Private
  */
 
-router.get('/displayUser', (req,res) => {
-  const query = user =  req.body ;
+router.post('/displayUser', (req,res) => {
+  const query =   req.body ;
   Services.find(query)
-      .exec((err, services) => res.json(services))
+      .exec((err, services) => res.json(services)) 
 })
 /**
  * @route GET api/services/display
@@ -81,6 +107,7 @@ router.get('/displayUser', (req,res) => {
 
 router.get('/displayZip', (req,res) => {
     const query = zipcode = req.body;
+  
     Services.find(query)
         .exec((err, services) => res.json(services))
 })
@@ -114,9 +141,7 @@ router.get('/display', (req,res) => {
  * @access Private
  */
 
-router.put('/:_id/daycare', passport.authenticate('jwt', {
-    session: false
-}), (req,res) => {
+router.put('/:_id/update', (req,res) => {
     if (!req.body) {
         return res.status(400).send({
           message: "Data to update can not be empty!"
@@ -128,7 +153,7 @@ router.put('/:_id/daycare', passport.authenticate('jwt', {
 })
 
 /**
- * @route GET api/services/:_id/grooming
+ * @route PUT api/services/:_id/grooming
  * @desc display the grooming
  * @access Private
  */
