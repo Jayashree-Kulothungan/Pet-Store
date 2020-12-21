@@ -1,130 +1,32 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const User = require('./User');
 
-const ServiceSchema = new Schema({    
-    organization : {
-        name : {type : String},
-        organizationName: { type: String },
-        email : {type : String},
-        phone: {type : String},
-        address : {
-            no : {type : String},  
-            street : {type : String},
-            locality : {type : String},
-            city : {type : String},
-            state : {type : String},
-            zipcode : {type : String},
-        },
+// Create the User Schema
+const UserSchema = new Schema({
+    name: {
+        type: String,
+        required: true
     },
-    daycare : {
-        opentime : {
-            weekdays : {type : String},
-            weekends : {type : String}
-        },
-        description : {type : String},
-        price : {
-            dogs : {
-                weekdays : {type : String},
-                weekends : {type : String}
-            },
-            cats : {
-                weekdays : {type : String},
-                weekends : {type : String}
-            },
-        },
-        foodDetails : {
-            dogs : {
-                breakfast : {
-                    price : {type : String},
-                },
-                lunch : {
-                    price : {type : String},
-                },
-                dinner : {
-                    price : {type : String},
-                }
-            },
-            cats : {
-                breakfast : {
-                    price : {type : String},
-                },
-                lunch : {
-                    price : {type : String},
-                },
-                dinner : {
-                    price : {type : String},
-                }
-            }
-        },
-        additionalServices : {type : String},
+    email: {
+        type: String,
+        required: true
     },
-    grooming : {
-        opentime : {
-            weekdays : {type : String},
-            weekends : {type : String}
-        },
-        description : {type : String},
-        groomingService : {
-            Dogs : [{
-                price : {type : String},
-            }],
-            Cats : [{
-                service : {type : String},
-                price : {type : String},
-            }],
-        },
-        additionalServices : {type : String},
+    mobile: {
+        type: String,
+        required: true
     },
-    dogwalker : {
-        availabletime : {
-            weekdays : {type : String},
-            weekends : {type : String}
-        },
-        description : {type : String},
-        price : {
-            weekdays : {type : String},
-            weekends : {type : String}
-        },
-        additionalServices : {type : String},
+    password: {
+        type: String,
+        required: true
     },
-    trainer : {
-        availabletime : {
-            weekdays : {type : String},
-            weekends : {type : String}
-        },
-        description : {type : String},
-        price : {
-            daily : {type : String},
-            weekly : {type : String},
-            monthly : {type : String}
-        },
-        additionalServices : {type : String},
+    address: {
+        type: String,
+        required: true
     },
-    breeding : {
-        breed : {type : String},
-        age : {type : String},
-        height : {type : String},
-        weight : {type : String},
-        color : {type : String},
-        eyeColor : {type : String},
-        price : {type : String},
-        number : {type : String},
-        location : {
-            building : {type : String},
-            street : {type : String},
-            locality:{type: String}, 
-            city : {type : String},
-            zipcode : {type : String}
-        },
-    },
-    
-    breedingImages:[{type:String}],
-    TrainingImage : [{type : String}],
-    DWImage : [{type : String}],
-    DCImage : [{type : String}],
-    GroomingImage : [{type : String}],
-    ServiceProvider : {type: Schema.Types.ObjectId, ref: User},
+    date: {
+        type: Date,
+        default: Date.now
+    }
 });
 
-module.exports = Services = mongoose.model('Services', ServiceSchema);
+module.exports = User = mongoose.model('users', UserSchema);
